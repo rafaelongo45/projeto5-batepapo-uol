@@ -69,6 +69,29 @@ function atualizaChat() {
     ultimaMensagem[dado.length-1].scrollIntoView();
 }
 
+function pegaMensagemDigitada(){
+    const mensagemDigitada = document.querySelector('input').value;
+    let dadosUsuario = {
+        from: nomeUsuario,
+	    to: 'Todos',
+	    text: mensagemDigitada,
+	    type: "message" // ou "private_message" para o bônus
+    }
+    console.log(mensagemDigitada);
+    enviaMensagemServidor(dadosUsuario);
+    mensagemDigitada = '';
+}
+
+function enviaMensagemServidor(dado){
+    let promessa = axios.post('https://mock-api.driven.com.br/api/v4/uol/messages', dado);
+    promessa.then(pegaMensagemServidor);
+    promessa.catch(falhaEnvioMensagem)
+}
+
+function falhaEnvioMensagem(){
+    window.location.reload()
+}
+
 entrarNoSite();
 setInterval(checarPresencaUsuario, 5000);
 pegaMensagemServidor();
