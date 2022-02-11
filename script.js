@@ -2,7 +2,12 @@ let dado = null;
 const janelaChat = document.querySelector('main');
 let nomeUsuario = null;
 let ultimaMensagem = null;
-let ultimaMensagemHTML = null;
+let objetoUltimaMsg = null;
+let objetoUltimaMsgAtualizada = null;
+let atualizou = false;
+
+//if lista de todas as mensagens for igual a lista de todas as msgs num momento
+//anterior, não faz nada. Else scrollintoview listamsgs.length-1
 
 function entrarNoSite(){
     nomeUsuario = prompt('Qual é o seu nome?');
@@ -26,8 +31,6 @@ function pegaMensagemServidor() {
 
 function pegaDadosMensagens(objeto) {
     dado = objeto.data;
-    console.log(objeto.data)
-    objetoUltimaMensagem = dado[dado.length-1].time;
     renderizaMensagem();
 }
 
@@ -43,7 +46,7 @@ function renderizaMensagem() {
             </div>`;
         } else if (dado[i].type === 'private_message') {
             tipoMensagem = 'reservada';
-            janelaChat.innerHTML += `<div class = 'mensagem reservada'> 
+            janelaChat.innerHTML += `<div class = 'mensagem ${tipoMensagem}'> 
             <span class = "hora">(${dado[i].time})</span>  <span class = "usuario">${dado[i].from}</span>  reservadamente para <span class = "usuario"> ${dado[i].to}</span>: Oi gatinha quer tc? 
             </div>`;
         } else {
@@ -54,30 +57,36 @@ function renderizaMensagem() {
         }
         pegaDadoUltimaMensagem(i)
     }
-
 }
 
 function pegaDadoUltimaMensagem(i){
-    if (i === dado.length - 1){
-        ultimaMensagem = document.querySelectorAll('.mensagem') 
-        ultimaMensagemHTML = ultimaMensagem[i].innerHTML;
+    ultimaMensagem = document.querySelectorAll('.mensagem') 
+    if (i === (dado.length - 1) && atualizou === false){
+        objetoUltimaMsg = {from: dado[i].from, to: dado[i].to, type: dado[i].type, time: dado[i].time, text: dado[i].text}
+        atualizou = true;
+    }else if (i === (dado.length-1) && atualizou === true){
+        atualizou = false;
+        objetoUltimaMsgAtualizada = {from: dado[i].from, to: dado[i].to, type: dado[i].type, time: dado[i].time, text: dado[i].text}
     }
 }
 
 function atualizaChat() {
     pegaMensagemServidor();
-    ultimaMensagem[dado.length-1].scrollIntoView();
+    if (objetoUltimaMsgAtualizada !== null && objetoUltimaMsg.time === objetoUltimaMsgAtualizada.time){
+        
+    }else{
+        ultimaMensagem[ultimaMensagem.length-1].scrollIntoView();
+    }
 }
 
 function pegaMensagemDigitada(){
-    const mensagemDigitada = document.querySelector('input').value;
+    let mensagemDigitada = document.querySelector('input').value; //fazer ela ser global
     let dadosUsuario = {
         from: nomeUsuario,
 	    to: 'Todos',
 	    text: mensagemDigitada,
 	    type: "message" // ou "private_message" para o bônus
     }
-    console.log(mensagemDigitada);
     enviaMensagemServidor(dadosUsuario);
     mensagemDigitada = '';
 }
@@ -95,4 +104,5 @@ function falhaEnvioMensagem(){
 entrarNoSite();
 setInterval(checarPresencaUsuario, 5000);
 pegaMensagemServidor();
-setInterval(atualizaChat, 3000)
+setInterval(atualizaChat, 3000);
+
