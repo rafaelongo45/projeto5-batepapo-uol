@@ -1,23 +1,20 @@
 let dado = null;
-const janelaChat = document.querySelector('main');
+let janelaChat = null;
 let nomeUsuario = null;
 let ultimaMensagem = null;
 let objetoUltimaMsg = null;
 let objetoUltimaMsgAtualizada = null;
 let atualizou = false;
 
-//if lista de todas as mensagens for igual a lista de todas as msgs num momento
-//anterior, não faz nada. Else scrollintoview listamsgs.length-1
-
-function entrarNoSite(){
-    nomeUsuario = prompt('Qual é o seu nome?');
+function entrarNoSite(nomeUsuario){
     const requisicao = axios.post('https://mock-api.driven.com.br/api/v4/uol/participants', {name: nomeUsuario})
+    requisicao.then(criaEstruturaSite);
     requisicao.catch(falhaNaEntrada);
 }
 
 function falhaNaEntrada(){
     alert("Digite outro nome. Este já está em uso!")
-    entrarNoSite();
+    window.location.reload();
 }
 
 function checarPresencaUsuario(){
@@ -36,8 +33,7 @@ function pegaDadosMensagens(objeto) {
 
 function renderizaMensagem() {
     let tipoMensagem = null;
-    janelaChat.innerHTML = null;
-
+    janelaChat.innerHTML = "";
     for (let i = 0; i < dado.length; i++) {
         if (dado[i].type === 'status') {
             tipoMensagem = 'status-sala';
@@ -46,7 +42,6 @@ function renderizaMensagem() {
             </div>`;
         } else if (dado[i].type === 'private_message') {
             tipoMensagem = 'reservada';
-            //if to === nomeusuario ou from tb, coloca no chat! Verificar o length-1(ta errado)
             mensagemPrivada(i, tipoMensagem); //faz a checagem e so mostra a msg se o from ou o to é o nomedeusuario
         }else {
             tipoMensagem = "";
@@ -112,8 +107,43 @@ function falhaEnvioMensagem(){
     window.location.reload()
 }
 
-entrarNoSite();
-setInterval(checarPresencaUsuario, 5000);
-pegaMensagemServidor();
-setInterval(atualizaChat, 3000);
+function criaEstruturaSite(){
+    const site = document.body;
+    site.innerHTML = `
+    <header class='header'>
+        <img src="./imagens/logo 1.png" alt="Logo da UOL">
+        <ion-icon name="people"></ion-icon>
+    </header>
+    <main>
+    
+    </main>
 
+    <footer>
+        <input class='caixa-texto' type="text" placeholder="Escreva aqui..." />
+        <button onclick="pegaMensagemDigitada()">
+            <ion-icon name="paper-plane-outline"></ion-icon>
+        </button>
+    </footer>`
+    janelaChat = document.querySelector('main');
+    pegaMensagemServidor();
+    setInterval(checarPresencaUsuario, 5000);
+    setInterval(atualizaChat, 3000);
+}
+
+function criaTelaInicial(){
+    const site = document.body;
+    site.innerHTML = `
+    <section class='tela inicial'>
+        <img src="./imagens/logo 2.png" alt="logo da uol">
+        <input type="text" placeholder="Digite seu nome">
+        <button onclick = "pegaNomeUsuario()">Entrar</button>
+    </section>`
+}
+
+function pegaNomeUsuario(){
+    const input = document.querySelector('input');
+    nomeUsuario = input.value;
+    entrarNoSite(nomeUsuario);
+}
+
+criaTelaInicial();
