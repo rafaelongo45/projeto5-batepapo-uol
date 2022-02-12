@@ -46,16 +46,25 @@ function renderizaMensagem() {
             </div>`;
         } else if (dado[i].type === 'private_message') {
             tipoMensagem = 'reservada';
-            janelaChat.innerHTML += `<div class = 'mensagem ${tipoMensagem}'> 
-            <span class = "hora">(${dado[i].time})</span>  <span class = "usuario">${dado[i].from}</span>  reservadamente para <span class = "usuario"> ${dado[i].to}</span>: Oi gatinha quer tc? 
-            </div>`;
-        } else {
+            //if to === nomeusuario ou from tb, coloca no chat! Verificar o length-1(ta errado)
+            mensagemPrivada(i, tipoMensagem); //faz a checagem e so mostra a msg se o from ou o to é o nomedeusuario
+        }else {
             tipoMensagem = "";
             janelaChat.innerHTML += `<div class = 'mensagem ${tipoMensagem}'>
             <span class = "hora">(${dado[i].time}) </span>  <span class = "usuario">${dado[i].from}</span> para <span class = "usuario"> ${dado[i].to}: </span>${dado[i].text}
             </div>`;
         }
         pegaDadoUltimaMensagem(i)
+    }
+}
+
+function mensagemPrivada(i, tipoMensagem){
+    if(dado[i].to === nomeUsuario || dado[i].from === nomeUsuario){
+        janelaChat.innerHTML += `<div class = 'mensagem ${tipoMensagem}'> 
+            <span class = "hora">(${dado[i].time})</span>  <span class = "usuario">${dado[i].from}</span>  reservadamente para <span class = "usuario"> ${dado[i].to}</span>: Oi gatinha quer tc? 
+            </div>`;
+    }else{
+        janelaChat.innerHTML += "";
     }
 }
 
@@ -87,6 +96,8 @@ function pegaMensagemDigitada(){
 	    text: mensagemDigitada,
 	    type: "message" // ou "private_message" para o bônus
     }
+
+    //no momento envia mensagem privada apenas para uma pessoa. quando incluir o bonus trocar o to e o tipe
     enviaMensagemServidor(dadosUsuario);
     mensagemDigitada = '';
 }
