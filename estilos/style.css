@@ -4,7 +4,7 @@
 
 body{
     font-family: 'Roboto', sans-serif;
-    background-color: #f3f3f3;
+    background-color: #f3f3f3;  
 }
 
 .header{
@@ -46,7 +46,7 @@ footer{
 .caixa-texto{
     width: 80%;
     height: 60%;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 400;
     font-style: italic;
     color: black;
@@ -131,3 +131,81 @@ section button{
     justify-content: center;
     color:#696969;
 }   
+
+/* Tela participantes */
+.novo-corpo{
+    position:fixed;
+    top:0;
+    left:0;
+    width: 30%;
+    height: 100%;
+    z-index:1;
+    background-color: rgba(0,0,0, 0.75);
+}
+.barra-lateral{
+    z-index: 1;
+    width: 70%;
+    height: 100%;
+    position: fixed;
+    top:0;
+    right:0;
+    background-color:#fff;
+    display:flex;
+    flex-direction: column;
+}
+
+menu{
+    display:flex;
+    flex-direction: column;
+}
+
+menu.barra-lateral b{
+    text-align: center;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 5% 10%;
+
+}
+
+menu p{
+    margin-top: 10px;
+    padding: 0 5%;
+    display:flex;
+    align-items: center;
+    font-size: 16px;
+    position: relative;
+}
+
+menu span{
+    align-items: center;
+    font-size: 30px;
+    margin-right: 10px;
+}
+
+.no-scroll{
+    overflow: hidden;
+}
+
+menu .listaUsuarios{
+    overflow-y:scroll;
+    overflow-x:hidden;
+    width:100%; 
+    height: 70%;
+}
+
+menu section{
+    width: 100%;
+    height:auto;
+    align-items: unset;
+}
+
+.nao-aparece{
+    display:none;
+}
+
+menu .check{
+    position: absolute;
+    right:0;
+    color: #28BB25;
+    font-size: 25px;
+}
